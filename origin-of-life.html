@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Origin of Life</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --card: #1a2235;
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --accent3: #34d399;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #1e293b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      background: radial-gradient(ellipse at 50% 60%, #0f2044 0%, var(--bg) 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Ccircle cx='200' cy='200' r='1' fill='white' opacity='0.6'/%3E%3Ccircle cx='50' cy='80' r='1.2' fill='white' opacity='0.5'/%3E%3Ccircle cx='350' cy='120' r='0.8' fill='white' opacity='0.7'/%3E%3Ccircle cx='100' cy='300' r='1' fill='white' opacity='0.4'/%3E%3Ccircle cx='300' cy='350' r='1.5' fill='white' opacity='0.5'/%3E%3Ccircle cx='180' cy='50' r='0.9' fill='white' opacity='0.6'/%3E%3Ccircle cx='380' cy='280' r='1.1' fill='white' opacity='0.5'/%3E%3Ccircle cx='20' cy='200' r='0.8' fill='white' opacity='0.4'/%3E%3Ccircle cx='230' cy='390' r='1' fill='white' opacity='0.6'/%3E%3Ccircle cx='70' cy='370' r='1.3' fill='white' opacity='0.5'/%3E%3C/svg%3E") repeat;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #e2e8f0 30%, var(--accent) 70%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero p {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--accent);
+      color: #0a0e1a;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 5rem 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+
+    p { color: var(--muted); margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+      margin-top: 2.5rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .timeline-dot {
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      z-index: 1;
+    }
+
+    .timeline-body { padding-top: 0.35rem; }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-desc { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
+
+    /* ── Theory cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .card p { font-size: 0.9rem; margin-bottom: 0; }
+
+    /* ── Molecules visual ── */
+    .molecule-viz {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .molecule-viz svg { max-width: 100%; height: auto; }
+
+    /* ── Steps ── */
+    .steps {
+      counter-reset: step;
+      margin-top: 2rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 2.2rem;
+      height: 2.2rem;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #0a0e1a;
+    }
+
+    .step-num::before { content: counter(step); }
+
+    .step-body h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .step-body p { font-size: 0.92rem; margin-bottom: 0; }
+
+    /* ── Quote ── */
+    blockquote {
+      border-left: 3px solid var(--accent3);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--card);
+      border-radius: 0 0.5rem 0.5rem 0;
+      color: var(--text);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p { font-size: 0.88rem; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <p class="hero-eyebrow">Science &amp; Discovery</p>
+  <h1>The Origin of Life</h1>
+  <p>How did chemistry become biology? Explore the scientific theories, milestone experiments, and key molecules behind one of humanity's greatest unsolved questions.</p>
+  <a href="#timeline" class="hero-cta">Begin the Journey</a>
+</div>
+
+<!-- ── Timeline ── -->
+<section id="timeline">
+  <div class="container">
+    <p class="section-label">Geological &amp; Chemical History</p>
+    <h2>A 4-Billion-Year Story</h2>
+    <p>Life did not appear suddenly. It emerged through a long chemical evolution across deep geological time.</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🌍</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~4.5 billion years ago</div>
+          <div class="timeline-title">Earth Forms</div>
+          <p class="timeline-desc">The young Earth accretes from the solar nebula. Intense volcanism and bombardment from space create an atmosphere rich in CO₂, N₂, H₂O, and trace amounts of NH₃ and CH₄ — a reducing atmosphere hostile to modern life, but chemically rich.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">☄️</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~4.1–3.8 billion years ago</div>
+          <div class="timeline-title">Late Heavy Bombardment &amp; Delivery of Organics</div>
+          <p class="timeline-desc">Meteorites and comets deliver complex organic molecules — amino acids, sugars, nucleobases — to Earth's surface. The Murchison meteorite (fallen 1969) confirmed that amino acids form in space, supporting an extraterrestrial contribution to life's building blocks.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">⚗️</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~3.8–3.5 billion years ago</div>
+          <div class="timeline-title">Prebiotic Chemistry</div>
+          <p class="timeline-desc">Simple inorganic molecules react via lightning, UV radiation, and hydrothermal vents to form amino acids, nucleotides, and lipids. The Urey–Miller experiment (1953) demonstrated this in the laboratory, producing 20+ amino acids from water, methane, ammonia, and hydrogen.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🧬</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~3.8 billion years ago</div>
+          <div class="timeline-title">First Self-Replicating Molecules (RNA World)</div>
+          <p class="timeline-desc">RNA molecules capable of both storing information and catalyzing reactions (ribozymes) emerge. RNA is now thought to predate DNA and proteins — a "RNA World" where evolution could begin before cells even existed.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🫧</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~3.8–3.5 billion years ago</div>
+          <div class="timeline-title">Protocells &amp; Lipid Membranes</div>
+          <p class="timeline-desc">Fatty acids spontaneously assemble into lipid bilayer vesicles in water. These protocells encapsulate RNA, creating an inside environment separate from the outside world — the first primitive cellular boundaries.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🦠</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~3.5 billion years ago</div>
+          <div class="timeline-title">LUCA — Last Universal Common Ancestor</div>
+          <p class="timeline-desc">Fossil stromatolites in Western Australia record some of the earliest microbial life. Genomic analysis identifies LUCA: a single-celled organism from which all life on Earth — Bacteria, Archaea, and Eukaryota — descends.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">🌿</div>
+        <div class="timeline-body">
+          <div class="timeline-date">~2.4 billion years ago</div>
+          <div class="timeline-title">Great Oxidation Event</div>
+          <p class="timeline-desc">Cyanobacteria evolve oxygenic photosynthesis, flooding the atmosphere with O₂. This transforms Earth's chemistry, enabling aerobic respiration and dramatically increasing the energy available for complex life.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Key Molecules ── -->
+<section id="molecules">
+  <div class="container">
+    <p class="section-label">Molecular Biology</p>
+    <h2>Life's Essential Molecules</h2>
+    <p>All life shares the same fundamental chemical toolkit, suggesting a single common origin.</p>
+
+    <div class="molecule-viz">
+      <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" aria-label="Diagram of life's key molecules">
+        <!-- DNA double helix simplified -->
+        <g transform="translate(50,20)">
+          <text x="50" y="14" fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle" font-family="sans-serif">DNA</text>
+          <!-- backbone strands -->
+          <path d="M30,20 Q70,50 30,80 Q-10,110 30,140 Q70,170 30,200" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+          <path d="M70,20 Q30,50 70,80 Q110,110 70,140 Q30,170 70,200" stroke="#818cf8" stroke-width="2.5" fill="none"/>
+          <!-- rungs -->
+          <line x1="30" y1="50" x2="70" y2="50" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+          <line x1="30" y1="80" x2="70" y2="80" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+          <line x1="30" y1="110" x2="70" y2="110" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+          <line x1="30" y1="140" x2="70" y2="140" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+          <line x1="30" y1="170" x2="70" y2="170" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+        </g>
+
+        <!-- RNA -->
+        <g transform="translate(200,20)">
+          <text x="50" y="14" fill="#818cf8" font-size="13" font-weight="700" text-anchor="middle" font-family="sans-serif">RNA</text>
+          <path d="M50,20 Q90,60 50,100 Q10,140 50,180 Q90,210 50,220" stroke="#818cf8" stroke-width="2.5" fill="none"/>
+          <circle cx="50" cy="50"  r="4" fill="#818cf8" opacity="0.7"/>
+          <circle cx="50" cy="80"  r="4" fill="#818cf8" opacity="0.7"/>
+          <circle cx="50" cy="110" r="4" fill="#818cf8" opacity="0.7"/>
+          <circle cx="50" cy="140" r="4" fill="#818cf8" opacity="0.7"/>
+          <circle cx="50" cy="170" r="4" fill="#818cf8" opacity="0.7"/>
+        </g>
+
+        <!-- Amino Acid -->
+        <g transform="translate(350,40)">
+          <text x="50" y="0" fill="#34d399" font-size="13" font-weight="700" text-anchor="middle" font-family="sans-serif">Amino Acid</text>
+          <circle cx="50" cy="90" r="28" fill="none" stroke="#34d399" stroke-width="2"/>
+          <text x="50" cy="90" y="94" fill="#34d399" font-size="11" text-anchor="middle" font-family="monospace">NH₂·CHR·COOH</text>
+          <line x1="78" y1="90" x2="100" y2="70" stroke="#34d399" stroke-width="1.5" opacity="0.7"/>
+          <line x1="22" y1="90" x2="0" y2="70" stroke="#34d399" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="100" cy="65" r="8" fill="#34d399" opacity="0.2" stroke="#34d399" stroke-width="1.5"/>
+          <circle cx="0" cy="65" r="8" fill="#34d399" opacity="0.2" stroke="#34d399" stroke-width="1.5"/>
+        </g>
+
+        <!-- Lipid -->
+        <g transform="translate(490,20)">
+          <text x="40" y="14" fill="#f59e0b" font-size="13" font-weight="700" text-anchor="middle" font-family="sans-serif">Lipid</text>
+          <circle cx="40" cy="40" r="16" fill="#f59e0b" opacity="0.25" stroke="#f59e0b" stroke-width="2"/>
+          <text x="40" y="44" fill="#f59e0b" font-size="9" text-anchor="middle" font-family="sans-serif">head</text>
+          <line x1="34" y1="56" x2="28" y2="180" stroke="#f59e0b" stroke-width="2" opacity="0.8"/>
+          <line x1="46" y1="56" x2="52" y2="180" stroke="#f59e0b" stroke-width="2" opacity="0.8"/>
+          <text x="40" y="196" fill="#f59e0b" font-size="9" text-anchor="middle" font-family="sans-serif">tails</text>
+        </g>
+      </svg>
+      <p style="font-size:0.82rem;margin-top:1rem;color:var(--muted);">The four molecular classes present in all living cells</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Theories ── -->
+<section id="theories">
+  <div class="container">
+    <p class="section-label">Scientific Hypotheses</p>
+    <h2>Leading Theories on Life's Origin</h2>
+    <p>No single theory has captured the complete picture. Each explains different pieces of the puzzle.</p>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Primordial Soup (Oparin–Haldane)</h3>
+        <p>Proposed in the 1920s, this theory suggests that early Earth's oceans were a warm "soup" of organic molecules energized by lightning and UV radiation, spontaneously forming amino acids and other building blocks.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🌋</div>
+        <h3>Hydrothermal Vents</h3>
+        <p>Deep-sea alkaline vents provide natural proton gradients, mineral catalysts, and a stable chemical environment. The "Lost City" vent field suggests life may have begun in warm, mineral-rich chimney structures at the ocean floor.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🧫</div>
+        <h3>RNA World Hypothesis</h3>
+        <p>RNA is both an information-storage molecule and a catalyst (ribozyme). This suggests RNA molecules that could copy themselves preceded DNA and proteins, bootstrapping Darwinian evolution before cells existed.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🪨</div>
+        <h3>Clay / Mineral Scaffolding</h3>
+        <p>Clay minerals like montmorillonite concentrate and organize organic molecules on their surfaces. Laboratory experiments show clays catalyze RNA polymerization, potentially acting as the first "templates" for genetic molecules.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">☄️</div>
+        <h3>Panspermia</h3>
+        <p>Life — or its chemical precursors — may have been seeded from space via meteorites or comets. The Murchison meteorite contains over 90 amino acids, many not found in life. This doesn't explain the ultimate origin, but widens the arena.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🧊</div>
+        <h3>Ice World / Cold Origin</h3>
+        <p>Thin ice layers on early Earth's oceans may have concentrated organic molecules and protected fragile RNA from UV degradation, creating micro-environments where the first replicators could stabilize and evolve.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Miller-Urey Experiment ── -->
+<section id="miller-urey">
+  <div class="container">
+    <p class="section-label">Landmark Experiment</p>
+    <h2>The Miller–Urey Experiment (1953)</h2>
+    <p>Stanley Miller and Harold Urey demonstrated that organic molecules critical to life can arise spontaneously from inorganic chemistry — transforming origin-of-life research forever.</p>
+
+    <blockquote>
+      "If God did not do it that way, then He missed a good bet."
+      <cite>— Harold Urey, upon seeing Miller's results</cite>
+    </blockquote>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h3>Simulate the Early Atmosphere</h3>
+          <p>Miller filled a sealed apparatus with water (H₂O), methane (CH₄), ammonia (NH₃), and hydrogen (H₂) — the gases thought to compose early Earth's atmosphere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h3>Add Energy — Lightning Sparks</h3>
+          <p>Electric sparks simulated lightning, providing the energy needed to break apart stable molecules and drive new chemical reactions.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h3>Condense and Collect</h3>
+          <p>Water vapor circulated through the apparatus, condensing and collecting in a liquid trap that simulated rain falling into an ancient ocean.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <h3>Analyze the Results</h3>
+          <p>After one week, 10–15% of carbon had been incorporated into organic compounds including glycine, alanine, and other amino acids — the building blocks of proteins. Life's chemistry emerged from non-living matter.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── The Biggest Questions ── -->
+<section id="questions">
+  <div class="container">
+    <p class="section-label">Open Frontiers</p>
+    <h2>What We Still Don't Know</h2>
+    <p>Even with decades of progress, origin-of-life research retains deep mysteries that continue to drive scientific investigation.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>The Chicken-and-Egg Problem</h3>
+        <p>DNA encodes the instructions to make proteins, but proteins are needed to copy DNA. Which came first? The RNA World hypothesis offers a partial answer, but how RNA itself arose remains unclear.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧭</div>
+        <h3>Homochirality</h3>
+        <p>Life uses only left-handed amino acids and right-handed sugars. Why? Abiotic chemistry produces both equally. The selection mechanism for this molecular "handedness" is unknown.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>The Genetic Code</h3>
+        <p>The mapping of codons to amino acids is nearly universal across all life — yet no physical chemistry forces this specific code. Why this code, and not another?</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🪐</div>
+        <h3>Life Beyond Earth</h3>
+        <p>Mars, Europa, and Enceladus may host liquid water and organic chemistry. Whether life arose elsewhere in the universe — and whether it would resemble ours — remains one of the most profound open questions in science.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Closing ── -->
+<section>
+  <div class="container">
+    <p class="section-label">Perspective</p>
+    <h2>You Are Stardust, Organized</h2>
+    <p>Every atom of carbon in your body was forged in a star that exploded billions of years ago. Every nucleotide in your DNA traces a lineage back to the first self-replicating molecules in Earth's ancient oceans.</p>
+    <p>The origin of life is not just a scientific question — it is the story of how the universe became aware of itself. We are the universe asking, "How did I begin?"</p>
+    <blockquote>
+      "We are a way for the cosmos to know itself."
+      <cite>— Carl Sagan, <em>Cosmos</em> (1980)</cite>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>The Origin of Life &mdash; A Scientific Overview</p>
+  <p style="color:var(--muted);">Based on peer-reviewed research in astrobiology, biochemistry, and evolutionary biology.</p>
+</footer>
+
+</body>
+</html>
